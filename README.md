@@ -2,8 +2,10 @@
 
 
 ### Overview
-**Minkowski** implements skip-gram training for learning word embeddings from continous text in hyperbolic space.
-Based on code from [fastText](https://fasttext.cc/), each word in the vocabulary is represented by a point on the hyperboloid model
+**Minkowski** implements skip-gram training for learning word embeddings in hyperbolic space from continuous text.  It accompanies the paper [Skip-gram word embeddings in hyperbolic space](https://arxiv.org/abs/1809.01498).
+
+Minkowski is based on code from [fastText](https://fasttext.cc/).
+Each word in the vocabulary is represented by a point on the hyperboloid model
 in Minkowski space. The embeddings are then optimized by negative sampling to
 minimize the hyperbolic distance of co-occurring words.
 
@@ -16,6 +18,8 @@ The differences to fastText are as follows:
 - It is possible to store intermediate word vectors using the _checkpoint_ command line argument.
 - It is possible to specify the power to which the unigram distribution is raised for negative sampling.
 
+To understand the hyperboloid model of hyperbolic space and how to compute distances between points, please see [Gradient descent in hyperbolic space](https://arxiv.org/abs/1805.08207).  
+
 ### Installation
 
 In order to build the executable, a recent C++ compiler and CMake need to be
@@ -25,8 +29,8 @@ The following commands produce the executable *minkowski* in the build directory
 :
 
 ```bash
-git clone ... ./minkowski
-cd .. & mkdir minkowski-build & cd minkowski-build
+git clone git@github.com:lateral/minkowski.git ./minkowski
+mkdir minkowski-build & cd minkowski-build
 cmake ../minkowski
 make
 ```
@@ -66,12 +70,16 @@ $ ./minkowski -input textfile.txt -output embeddings -dimension 50 -start-lr 0.1
 -threads 64
 ```
 
+### Evaluation
+
+For evaluation using the word similarity task, see [this script](python/evaluate_similarity.py).
+
+Note that the resulting vectors can not be treated as vectors in Euclidean space.  In particular, you can not form document vectors by averaging, and the similarity of two vectors needs to be measured using the hyperbolic distance.  Furthermore, these vectors can not be used in downstream tasks that are not specifically designed to work with the hyperboloid model of hyperbolic space (so don't use sklearn!).
+
+To understand the hyperboloid model of hyperbolic space and how to compute distances between points, please see [Gradient descent in hyperbolic space](https://arxiv.org/abs/1805.08207).
+
 ### References
 
-[1] Tomas Mikolov, Kai Chen, Greg Corrado, Jeffrey Dean: Efficient estimation of
- word representations in vector space. arXiv preprint arXiv:1301.3781. [pdf]
- (https://arxiv.org/pdf/1301.3781.pdf?)
+[Skip-gram word embeddings in hyperbolic space](https://arxiv.org/abs/1809.01498), Leimeister & Wilson, arXiv:1809.01498, 2018.
 
-[2] Maximilian Nickel, Douwe Kiela: Poincaré Embeddings for Learning
-Hierarchical Representations. NIPS 2017. [pdf](https://papers.nips
-.cc/paper/7213-poincare-embeddings-for-learning-hierarchical-representations.pdf)
+[Gradient descent in hyperbolic space](https://arxiv.org/abs/1805.08207), Wilson & Leimeister, arXiv:1805.08207, 2018.
